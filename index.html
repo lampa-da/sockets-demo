@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Document</title>
+</head>
+  <body>
+    <h1>Numbers Chat<h1>
+    <a href='#'>Chat</a>
+    <ul>
+    </ul>
+  <script>
+    const ul = document.querySelector('ul')
+
+    const a = document.querySelector('a')
+    a.addEventListener('click', async(ev)=>{
+      ev.preventDefault()
+      const response =  await fetch('/',{
+        method: 'post'
+      })
+      const message = await response.json()
+      ul.innerHTML += `<li> ${message.num}</li>`
+      socket.send(JSON.stringify(message))
+    })
+    const url = window.document.location.origin.replace('http', 'ws')
+    const socket = new WebSocket(url)
+    socket.addEventListener('message', (ev)=> {
+      const message = JSON.parse(ev.data)
+      if(message.history){
+        message.history.forEach(_message=>{
+          ul.innerHTML += `<li> ${_message.num}</li>`
+        })
+      }
+      else{
+        ul.innerHTML += `<li> ${message.num}</li>`
+      }
+      // console.log(message)
+    })
+    // console.log(url)
+  </script>
+  </body>
+</html>
