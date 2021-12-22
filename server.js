@@ -14,9 +14,12 @@ numbers.push(randomMessage())
 console.log(numbers)
 
 app.get('/', (req, res)=>res.sendFile(path.join(__dirname, 'index.html')))
+//when clicked on from client end, invoke the randomnumber function
 app.post('/', (req, res)=>{
   const message = randomMessage()
+  //update the array of numbers
   numbers.push(message)
+  //also send the number received from randomNumber() to the client's end
   res.send(message)
 })
 
