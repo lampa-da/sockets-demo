@@ -10,27 +10,36 @@
     </ul>
   <script>
     const ul = document.querySelector('ul')
-
+    //if sequred connection, it needs wss
     const a = document.querySelector('a')
     a.addEventListener('click', async(ev)=>{
+      // prevent default behavier
       ev.preventDefault()
+      //trigger post route
       const response =  await fetch('/',{
         method: 'post'
       })
+      //grab what's sent from post route
       const message = await response.json()
+      //append the received data onto the innerHTML
       ul.innerHTML += `<li> ${message.num}</li>`
+      //andalso pass the data onto the websocket connection
       socket.send(JSON.stringify(message))
     })
     const url = window.document.location.origin.replace('http', 'ws')
+    //this creates a connection
     const socket = new WebSocket(url)
+    //another event listener will listen for updates
     socket.addEventListener('message', (ev)=> {
       const message = JSON.parse(ev.data)
       if(message.history){
         message.history.forEach(_message=>{
+          //if it's history , map through and put it inside ul
           ul.innerHTML += `<li> ${_message.num}</li>`
         })
       }
       else{
+        //if it's not history such as when another tab updates the list
         ul.innerHTML += `<li> ${message.num}</li>`
       }
       // console.log(message)
